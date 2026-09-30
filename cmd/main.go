@@ -8,9 +8,9 @@ import (
 	"github.com/mamun-jsx/Ticket-Booking-App/internal/app"
 )
 
-func main() { 
+func main() {
 	application := app.BootStrapApp() // call app file
-	fiberApp := fiber.New() // make fiber app 
+	fiberApp := fiber.New()           // make fiber app
 
 	// make server address
 	serverAddress := fmt.Sprintf(":%s", application.Config.AppPort)
