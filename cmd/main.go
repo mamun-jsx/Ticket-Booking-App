@@ -6,12 +6,15 @@ import (
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/mamun-jsx/Ticket-Booking-App/internal/app"
+	"github.com/mamun-jsx/Ticket-Booking-App/internal/router"
 )
 
 func main() {
 	application := app.BootStrapApp() // call app file
 	fiberApp := fiber.New()           // make fiber app
 
+	// register app routes
+	router.SetupRoutes(fiberApp, application)
 	// make server address
 	serverAddress := fmt.Sprintf(":%s", application.Config.AppPort)
 
