@@ -26,7 +26,8 @@ func DatabaseConnection(cfg *config.Config) (*gorm.DB, error) {
 		return nil, err
 	}
 	// Unpack the slice automatically via the models func from model package
-	err = db.AutoMigrate(models.GetModels()...)
+	// get the user model from dynamic func GetRegisterModels and auto migrate to database
+	err = db.AutoMigrate(models.GetRegisterModels()...)
 	if err != nil {
 		log.Printf("Database migration failed: %v", err)
 		return nil, err
