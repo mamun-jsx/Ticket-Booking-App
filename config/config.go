@@ -20,6 +20,7 @@ func getEnv(key, fallback string) string {
 	return fallback
 }
 
+// make function to load env files and store into config
 func LoadEnv() *Config {
 	if err := godotenv.Load(); err != nil {
 		log.Fatal("env file failed to load")
@@ -28,5 +29,4 @@ func LoadEnv() *Config {
 		AppPort: getEnv("PORT", "8080"),
 		DbUrl:   getEnv("DatabaseURL", "localhost"),
 	}
-
 }
