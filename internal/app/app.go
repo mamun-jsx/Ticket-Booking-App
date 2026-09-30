@@ -14,7 +14,7 @@ type App struct {
 	Models *ModelsRec
 }
 
-func MountApp() *App {
+func BootStrapApp() *App {
 	cfg := config.LoadEnv()
 	db, err := database.DatabaseConnection(cfg)
 	if err != nil {
