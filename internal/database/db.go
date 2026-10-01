@@ -32,6 +32,6 @@ func DatabaseConnection(cfg *config.Config) (*gorm.DB, error) {
 		log.Printf("Database migration failed: %v", err)
 		return nil, err
 	}
-	log.Println("🚀 PostgreSQL connection and migration successful")
+	log.Println("🚀🚀🚀🚀 PostgreSQL Migration successful 🚀🚀🚀🚀")
 	return db, nil
 }

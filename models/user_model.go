@@ -1,10 +1,10 @@
 package models
 
 import (
-	// "time"
+// "time"
 
-	// "github.com/google/uuid"
-	// "gorm.io/gorm"
+// "github.com/google/uuid"
+// "gorm.io/gorm"
 )
 
 type User struct {
@@ -13,3 +13,6 @@ type User struct {
 	Password string `gorm:"type:varchar(255);not null" json:"password"`
 }
 
+func init() {
+	RegisterModel(&User{})
+}
