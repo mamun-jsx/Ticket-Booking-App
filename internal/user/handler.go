@@ -22,7 +22,7 @@ func NewHandler(service *Service) *Handler {
 func (h *Handler) CreateUser(c fiber.Ctx) error {
 	var req dto.CreateRequest // user input
 
-	// ১. ক্লায়েন্ট থেকে আসা রিকোয়েস্ট বডি পার্স/বাইন্ড করা হচ্ছে
+	// 1. Bind and parse JSON request body into the CreateRequest DTO
 	if err := c.Bind().Body(&req); err != nil {
 		return c.Status(http.StatusBadRequest).JSON(httpresponse.Error{
 			Code:    http.StatusBadRequest,
@@ -32,9 +32,10 @@ func (h *Handler) CreateUser(c fiber.Ctx) error {
 
 	}
 
-	// ২. সার্ভিস লেয়ার কল করে বিজনেস লজিক সম্পন্ন করা হচ্ছে
+	// 2. Delegate business logic and entity creation to the service layer
 	res, err := h.service.CreateUser(&req)
 
+	// 3. Return an error response if service layer returns an error
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(httpresponse.Error{
 			Code:    http.StatusInternalServerError,
@@ -43,7 +44,7 @@ func (h *Handler) CreateUser(c fiber.Ctx) error {
 		})
 	}
 
-	// ৩. সফল হলে স্ট্যাটাস 201 Created সহ JSON রেসপন্স রিটার্ন করা হচ্ছে
+	// 4. Return HTTP 201 Created with the user response DTO on success
 	return c.Status(http.StatusCreated).JSON(res)
 }
 

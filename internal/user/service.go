@@ -16,22 +16,22 @@ func NewService(repo UserRepository) *Service {
 
 // CreateUser handles user creation logic, saves the user to repository, and returns a response DTO.
 func (s *Service) CreateUser(req *dto.CreateRequest) (*dto.Response, error) {
-	// DTO রিকুয়েস্ট থেকে ডেটা নিয়ে নতুন User মডেল তৈরি করা হচ্ছে
+	// 1. Map incoming DTO request data to the domain User entity
 	newUser := User{
 		Name:     req.Name,
 		Email:    req.Email,
 		Password: req.Password,
 	}
 
-	// রিপোজিটরি মেথড কল করে ডাটাবেজে ইউজার সেভ করা হচ্ছে
+	// 2. Persist the new user entity in the database via the repository layer
 	err := s.repo.CreateUser(&newUser)
 
-	// যদি ডাটাবেজে ইউজার তৈরিতে কোনো এরর হয়, তবে তা রিটার্ন করা হচ্ছে
+	// 3. Return an error if database creation fails (e.g. duplicate key or DB connection issues)
 	if err != nil {
 		return nil, err
 	}
 
-	// সফলভাবে সেভ হওয়ার পর ক্লায়েন্টের জন্য রেসপন্স DTO প্রস্তুত করা হচ্ছে
+	// 4. Construct the outgoing response DTO, omitting sensitive fields like password
 	response := dto.Response{
 		ID:        newUser.ID,
 		Name:      newUser.Name,
@@ -39,6 +39,6 @@ func (s *Service) CreateUser(req *dto.CreateRequest) (*dto.Response, error) {
 		CreatedAt: newUser.CreatedAt.String(),
 	}
 
-	// রেসপন্সের পয়েন্টার রিটার্ন করা হচ্ছে
+	// 5. Return a pointer to the populated response DTO
 	return &response, nil
 }

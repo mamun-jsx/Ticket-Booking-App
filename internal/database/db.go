@@ -29,7 +29,7 @@ func DatabaseConnection(cfg *config.Config) (*gorm.DB, error) {
 	// Auto-migrate domain entities directly
 	err = db.AutoMigrate(
 		&user.User{},
-		// ভবিষ্যতে নতুন ডোমেইন আসলে এখানে যোগ হবে, যেমন: &ticket.Ticket{}
+		// Future domain entities will be added here, e.g.: &ticket.Ticket{}
 	)
 	if err != nil {
 		log.Printf("Database migration failed: %v", err)

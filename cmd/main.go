@@ -10,15 +10,19 @@ import (
 )
 
 func main() {
-	application := app.BootStrapApp() // call app file
-	fiberApp := fiber.New()           // make fiber app
+	// 1. Initialize application configuration and database connection
+	application := app.BootStrapApp()
 
-	// register app routes
+	// 2. Initialize a new Fiber web application instance
+	fiberApp := fiber.New()
+
+	// 3. Register all API endpoints and application routes
 	router.SetupRoutes(fiberApp, application)
-	// make server address
+
+	// 4. Construct server listening address using the port from configuration
 	serverAddress := fmt.Sprintf(":%s", application.Config.AppPort)
 
-	// Server listen on port
+	// 5. Start the HTTP server
 	log.Printf("🚀 Server is running on http://localhost%s", serverAddress)
 	if err := fiberApp.Listen(serverAddress); err != nil {
 		log.Fatalf("server failed to run: %v", err)
