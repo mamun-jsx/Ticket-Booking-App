@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"github.com/mamun-jsx/Ticket-Booking-App/config"
-	"github.com/mamun-jsx/Ticket-Booking-App/models"
+	"github.com/mamun-jsx/Ticket-Booking-App/internal/user"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -25,9 +25,12 @@ func DatabaseConnection(cfg *config.Config) (*gorm.DB, error) {
 		log.Printf("Database connection failed: %v", err)
 		return nil, err
 	}
-	// Unpack the slice automatically via the models func from model package
-	// get the user model from dynamic func GetRegisterModels and auto migrate to database
-	err = db.AutoMigrate(models.GetRegisterModels()...)
+
+	// Auto-migrate domain entities directly
+	err = db.AutoMigrate(
+		&user.User{},
+		// ভবিষ্যতে নতুন ডোমেইন আসলে এখানে যোগ হবে, যেমন: &ticket.Ticket{}
+	)
 	if err != nil {
 		log.Printf("Database migration failed: %v", err)
 		return nil, err

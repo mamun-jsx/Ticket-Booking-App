@@ -9,7 +9,9 @@ func SetupRoutes(fiberApp *fiber.App, application *app.App) {
 	fiberApp.Get("/", func(c fiber.Ctx) error {
 		return c.SendString("Ticket Booking APP 🏃")
 	})
-	// api := fiberApp.Group("/api/v1")
-	// ==================| Module Register |==================
-	// SetupBookRoutes(api, application)
+
+	api := fiberApp.Group("/api/v1")
+
+	// ==================| User Routes |==================
+	api.Post("/users", application.Models.UserHandler.CreateUser)
 }

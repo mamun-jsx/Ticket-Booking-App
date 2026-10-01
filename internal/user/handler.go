@@ -8,18 +8,18 @@ import (
 	"github.com/mamun-jsx/Ticket-Booking-App/internal/user/dto"
 )
 
-type handler struct {
-	service *service
+type Handler struct {
+	service *Service
 }
 
-func NewHandler(service *service) *handler {
-	return &handler{
+func NewHandler(service *Service) *Handler {
+	return &Handler{
 		service: service,
 	}
 }
 
 // CreateUser handles HTTP request to create a new user.
-func (h *handler) CreateUser(c fiber.Ctx) error {
+func (h *Handler) CreateUser(c fiber.Ctx) error {
 	var req dto.CreateRequest // user input
 
 	// ১. ক্লায়েন্ট থেকে আসা রিকোয়েস্ট বডি পার্স/বাইন্ড করা হচ্ছে
