@@ -27,10 +27,12 @@ func (s *service) CreateUser(req *dto.CreateRequest) (*dto.Response, error) {
 		Email:    req.Email,
 		Password: req.Password,
 	}
-
+	err := newUser.hashPassword(req.Password) // convert raw password to hashed
+	if err != nil {
+		return nil, err
+	}
 	// 2. Persist the new user entity in the database via the repository layer
-	err := s.repo.CreateUser(&newUser)
-
+	err = s.repo.CreateUser(&newUser)
 	// 3. Return an error if database creation fails (e.g. duplicate key or DB connection issues)
 	if err != nil {
 		return nil, err
