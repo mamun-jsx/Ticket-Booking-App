@@ -2,20 +2,25 @@ package user
 
 import "github.com/mamun-jsx/Ticket-Booking-App/internal/user/dto"
 
-// Service handles business logic related to users.
-type Service struct {
+// UserService defines the business logic interface for user operations.
+type UserService interface {
+	CreateUser(req *dto.CreateRequest) (*dto.Response, error)
+}
+
+// service implements UserService interface.
+type service struct {
 	repo UserRepository
 }
 
-// NewService creates and returns a new instance of Service as a pointer.
-func NewService(repo UserRepository) *Service {
-	return &Service{
+// NewService creates and returns a new UserService implementation.
+func NewService(repo UserRepository) UserService {
+	return &service{
 		repo: repo,
 	}
 }
 
 // CreateUser handles user creation logic, saves the user to repository, and returns a response DTO.
-func (s *Service) CreateUser(req *dto.CreateRequest) (*dto.Response, error) {
+func (s *service) CreateUser(req *dto.CreateRequest) (*dto.Response, error) {
 	// 1. Map incoming DTO request data to the domain User entity
 	newUser := User{
 		Name:     req.Name,
