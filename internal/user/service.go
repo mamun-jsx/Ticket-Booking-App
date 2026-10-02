@@ -2,7 +2,9 @@ package user
 
 import (
 	"errors"
+	"fmt"
 
+	"github.com/mamun-jsx/Ticket-Booking-App/internal/auth"
 	"github.com/mamun-jsx/Ticket-Booking-App/internal/user/dto"
 )
 
@@ -16,14 +18,13 @@ type UserService interface {
 
 // service implements UserService interface.
 type service struct {
-	repo UserRepository
+	repo       UserRepository
+	jwtService auth.JWTService
 }
 
 // NewService creates and returns a new UserService implementation.
-func NewService(repo UserRepository) UserService {
-	return &service{
-		repo: repo,
-	}
+func NewService(repo UserRepository, jwtService auth.JWTService) UserService {
+	return &service{repo, jwtService}
 }
 
 // CreateUser handles user creation logic, saves the user to repository, and returns a response DTO.
@@ -38,6 +39,7 @@ func (s *service) CreateUser(req *dto.CreateRequest) (*dto.Response, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	// 2. Persist the new user entity in the database via the repository layer
 	err = s.repo.CreateUser(&newUser)
 	// 3. Return an error if database creation fails (e.g. duplicate key or DB connection issues)
@@ -79,11 +81,18 @@ func (s *service) LoginUser(req *dto.LoginRequest) (*dto.Response, error) {
 	if err != nil {
 		return nil, ErrorInvalidEmailPassword
 	}
+	// generate JWT token
+	token, err := s.jwtService.GenerateToken(user.ID, user.Email, user.Name)
+	if err != nil {
+		return nil, fmt.Errorf("failed to generate token %w", err)
+	}
+
 	// response
 	response := dto.Response{
 		ID:        user.ID,
 		Name:      user.Name,
 		Email:     user.Email,
+		Token:     token,
 		CreatedAt: user.CreatedAt.String(),
 	}
 	return &response, nil

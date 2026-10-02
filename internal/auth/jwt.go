@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/labstack/gommon/email"
 )
 
 const (
@@ -23,7 +22,7 @@ type JwtCustomClaim struct {
 
 type JWTService interface {
 	GenerateToken(userID uint, email string, name string) (string, error)
-	ValidateToken(tokenStr string) (*JwtCustomClaim, error)
+	// ValidateToken(tokenStr string) (*JwtCustomClaim, error)
 }
 
 type jwtService struct {
