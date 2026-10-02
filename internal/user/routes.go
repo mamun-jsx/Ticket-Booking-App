@@ -11,6 +11,7 @@ func InitUserRoutes(router fiber.Router, db *gorm.DB) {
 	userService := NewService(userRepo)
 	userHandler := NewHandler(userService)
 
-	users := router.Group("/users")
-	users.Post("/create", userHandler.CreateUser)
+	users := router.Group("/auth")
+	users.Post("/register", userHandler.CreateUser)
+	users.Post("/login", userHandler.LoginUser)
 }

@@ -12,6 +12,7 @@ var ErrorAlreadyExist = errors.New("user with this email already exist")
 // UserRepository defines the contract for user database operations.
 type UserRepository interface {
 	CreateUser(user *User) error
+	GetUserByEmail(email string) (*User, error)
 }
 
 // repository implements UserRepository interface with a GORM database instance.
@@ -38,4 +39,18 @@ func (r *repository) CreateUser(user *User) error {
 		return result.Error
 	}
 	return nil
+}
+
+// get a user by email
+func (r *repository) GetUserByEmail(email string) (*User, error) {
+	var user User
+	result := r.db.Where(&User{Email: email}).First(&user)
+	if result.Error != nil {
+		// if user not found with this email
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
+		return nil, result.Error
+	}
+	return &user, nil
 }

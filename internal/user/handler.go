@@ -48,3 +48,29 @@ func (h *Handler) CreateUser(c fiber.Ctx) error {
 	return c.Status(http.StatusCreated).JSON(res)
 }
 
+// LoginUser handles user authentication request.
+func (h *Handler) LoginUser(c fiber.Ctx) error {
+	var req dto.LoginRequest
+
+	// 1. Bind and parse JSON request body
+	if err := c.Bind().Body(&req); err != nil {
+		return c.Status(http.StatusBadRequest).JSON(httpresponse.Error{
+			Code:    http.StatusBadRequest,
+			Message: "Invalid request body Input",
+			Details: err.Error(),
+		})
+	}
+
+	// 2. Authenticate user via service layer
+	res, err := h.service.LoginUser(&req)
+	if err != nil {
+		return c.Status(http.StatusUnauthorized).JSON(httpresponse.Error{
+			Code:    http.StatusUnauthorized,
+			Message: "Authentication failed",
+			Details: err.Error(),
+		})
+	}
+
+	// 3. Return HTTP 200 OK with user response DTO
+	return c.Status(http.StatusOK).JSON(res)
+}

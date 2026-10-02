@@ -26,7 +26,7 @@ func LoadEnv() *Config {
 		log.Fatal("env file failed to load")
 	}
 	return &Config{
-		AppPort: getEnv("PORT", "8080"),
+		AppPort: getEnv("PORT", "4001"),
 		DbUrl:   getEnv("DatabaseURL", "localhost"),
 	}
 }

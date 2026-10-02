@@ -1,10 +1,17 @@
 package user
 
-import "github.com/mamun-jsx/Ticket-Booking-App/internal/user/dto"
+import (
+	"errors"
+
+	"github.com/mamun-jsx/Ticket-Booking-App/internal/user/dto"
+)
+
+var ErrorInvalidEmailPassword = errors.New("Invalid Access ID password Not Match")
 
 // UserService defines the business logic interface for user operations.
 type UserService interface {
 	CreateUser(req *dto.CreateRequest) (*dto.Response, error)
+	LoginUser(req *dto.LoginRequest) (*dto.Response, error)
 }
 
 // service implements UserService interface.
@@ -48,4 +55,37 @@ func (s *service) CreateUser(req *dto.CreateRequest) (*dto.Response, error) {
 
 	// 5. Return a pointer to the populated response DTO
 	return &response, nil
+}
+
+// login user
+
+func (s *service) LoginUser(req *dto.LoginRequest) (*dto.Response, error) {
+	// query into db check email is exist or not into repo
+	user, err := s.repo.GetUserByEmail(req.Email)
+
+	// if user not found
+	if err != nil {
+		return nil, err
+	}
+
+	// if user is nil
+	if user == nil {
+		return nil, ErrorInvalidEmailPassword
+	}
+
+	// compare password
+
+	err = user.checkPassword(req.Password)
+	if err != nil {
+		return nil, ErrorInvalidEmailPassword
+	}
+	// response
+	response := dto.Response{
+		ID:        user.ID,
+		Name:      user.Name,
+		Email:     user.Email,
+		CreatedAt: user.CreatedAt.String(),
+	}
+	return &response, nil
+
 }
