@@ -13,8 +13,8 @@ const (
 
 type JwtCustomClaim struct {
 	UserID uint   `json:"user_id"`
-	Name   string `json:"name"`
 	Email  string `json:"email"`
+	Name   string `json:"name"`
 	jwt.RegisteredClaims
 }
 
@@ -47,16 +47,13 @@ func NewJWTService(secretKey string, tokenDuration time.Duration) JWTService {
 func (s *jwtService) GenerateToken(userId uint, email string, name string) (string, error) {
 	claims := JwtCustomClaim{
 		UserID: userId,
-		Name:   name,
 		Email:  email,
-		RegisteredClaims: jwt.RegisteredClaims{
+		Name:   name,
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(s.tokenDuration)),
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 			Issuer:    "ticket-booking-app",
-		},
 	}
-
-	token := jwt.NewWithClaims(jwt.SigningMethodES256, claims)
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenStr, err := token.SignedString([]byte(s.secretKey))
 	if err != nil {
 		return "", err
