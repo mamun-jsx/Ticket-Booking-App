@@ -74,8 +74,8 @@ func (h *handler) GetEventByID(c fiber.Ctx) error {
 			Details: err.Error(),
 		})
 	}
-	
-	res, err := h.service.GetEventByID(uint(id))
+	// response send to client side
+	res, err := h.service.GetEventByID(uint(id)) // convert into unit by default it provide 64-bit
 	if err != nil {
 		return eventErrorResponse(c, err)
 	}
