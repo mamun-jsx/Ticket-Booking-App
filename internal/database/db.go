@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/mamun-jsx/Ticket-Booking-App/config"
+	"github.com/mamun-jsx/Ticket-Booking-App/internal/event"
 	"github.com/mamun-jsx/Ticket-Booking-App/internal/user"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -26,9 +27,10 @@ func DatabaseConnection(cfg *config.Config) (*gorm.DB, error) {
 		return nil, err
 	}
 
-	// Auto-migrate domain entities directly
+	//! Auto-migrate domain entities directly
 	err = db.AutoMigrate(
 		&user.User{},
+		&event.Event{},
 		// Future domain entities will be added here, e.g.: &ticket.Ticket{}
 	)
 	if err != nil {

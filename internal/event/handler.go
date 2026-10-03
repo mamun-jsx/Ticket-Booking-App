@@ -15,7 +15,7 @@ type handler struct {
 	service EventService
 }
 
-func NewHandler(s *service) *handler {
+func NewHandler(s EventService) *handler {
 	return &handler{service: s}
 }
 
