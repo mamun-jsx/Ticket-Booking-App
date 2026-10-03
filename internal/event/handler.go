@@ -62,3 +62,4 @@ func (h *handler) GetAllEvents(c fiber.Ctx) error {
 	}
 	return c.Status(http.StatusOK).JSON(events)
 }
+
