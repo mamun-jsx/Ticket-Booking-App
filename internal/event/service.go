@@ -7,7 +7,7 @@ import (
 )
 
 type EventService interface {
-	CreateEvent(event *Event) error
+	CreateEvent(req *dto.CreateRequestEvent) (*dto.ResponseEvent, error)
 	GetAllEvents() ([]*Event, error)
 	GetEventByID(id uint64) (*Event, error)
 	UpdateEvent(event *Event) error
@@ -24,7 +24,7 @@ func NewService(repo EventRepository) EventService {
 }
 
 func (s *service) CreateEvent(req *dto.CreateRequestEvent) (*dto.ResponseEvent, error) {
-	
+
 	parsedTime, err := time.Parse(time.RFC3339, req.StartsAt)
 	if err != nil {
 		return nil, err // Return parsing errors (e.g., bad format from client)
