@@ -3,6 +3,7 @@ package router
 import (
 	"github.com/gofiber/fiber/v3"
 	"github.com/mamun-jsx/Ticket-Booking-App/internal/app"
+	"github.com/mamun-jsx/Ticket-Booking-App/internal/event"
 	"github.com/mamun-jsx/Ticket-Booking-App/internal/user"
 )
 
@@ -20,5 +21,5 @@ func SetupRoutes(fiberApp *fiber.App, application *app.App) {
 	// Register user domain endpoints (e.g. POST /api/v1/users/create)
 
 	user.InitUserRoutes(api, application.DB)
-
+	event.InitEventRoutes(api, application.DB)
 }
