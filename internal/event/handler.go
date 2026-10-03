@@ -3,6 +3,7 @@ package event
 import (
 	"errors"
 	"net/http"
+	"strconv"
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/mamun-jsx/Ticket-Booking-App/internal/event/dto"
@@ -63,3 +64,20 @@ func (h *handler) GetAllEvents(c fiber.Ctx) error {
 	return c.Status(http.StatusOK).JSON(events)
 }
 
+// * Get a single Event via ID
+func (h *handler) GetEventByID(c fiber.Ctx) error {
+	id, err := strconv.Atoi(c.Params("id"))
+	if err != nil {
+		return c.Status(http.StatusBadRequest).JSON(httpresponse.Error{
+			Code:    http.StatusBadRequest,
+			Message: "Invalid Event ID",
+			Details: err.Error(),
+		})
+	}
+	
+	res, err := h.service.GetEventByID(uint(id))
+	if err != nil {
+		return eventErrorResponse(c, err)
+	}
+	return c.Status(http.StatusOK).JSON(res)
+}
