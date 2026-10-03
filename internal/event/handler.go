@@ -50,11 +50,7 @@ func (h *handler) CreateEvent(c fiber.Ctx) error {
 	res, err := h.service.CreateEvent(&req)
 
 	if err != nil {
-		return c.Status(http.StatusInternalServerError).JSON(httpresponse.Error{
-			Code:    http.StatusInternalServerError,
-			Message: "Unable to create event",
-			Details: err.Error(),
-		})
+		return eventErrorResponse(c, err)
 	}
 	return c.Status(http.StatusOK).JSON(res)
 }
