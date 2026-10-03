@@ -29,5 +29,8 @@ func (e *Event) ToResponse() *dto.ResponseEvent {
 		TotalTickets:     e.TotalTickets,
 		AvailableTickets: e.AvailableTickets,
 		Price:            e.Price,
+		CreatedAt:        e.CreatedAt,
+		UpdatedAt:        e.UpdatedAt,
+		// DeletedAt:        e.DeletedAt,
 	}
 }

@@ -11,6 +11,8 @@ type ResponseEvent struct {
 	TotalTickets     int       `json:"total_tickets"`
 	AvailableTickets int       `json:"available_tickets"`
 	Price            int       `json:"price"`
+	CreatedAt        time.Time `json:"created_at"`
+	UpdatedAt        time.Time `json:"updated_at"`
 }
 
 
