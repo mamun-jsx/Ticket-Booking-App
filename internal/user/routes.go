@@ -5,6 +5,7 @@ import (
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/mamun-jsx/Ticket-Booking-App/internal/auth"
+	"github.com/mamun-jsx/Ticket-Booking-App/internal/middlewares"
 	"gorm.io/gorm"
 )
 
@@ -18,5 +19,5 @@ func InitUserRoutes(router fiber.Router, db *gorm.DB) {
 	users := router.Group("/auth")
 	users.Post("/register", userHandler.CreateUser)
 	users.Post("/login", userHandler.LoginUser)
+	users.Get("/me", middlewares.AuthMiddleware(jwtService), userHandler.AuthUser)
 }
-

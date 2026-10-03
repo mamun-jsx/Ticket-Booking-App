@@ -74,3 +74,27 @@ func (h *Handler) LoginUser(c fiber.Ctx) error {
 	// 3. Return HTTP 200 OK with user response DTO
 	return c.Status(http.StatusOK).JSON(res)
 }
+
+// AuthUser returns the authenticated user's profile info stored by AuthMiddleware.
+func (h *Handler) AuthUser(c fiber.Ctx) error {
+	userID, ok := c.Locals("user_id").(uint)
+	if !ok {
+		return c.Status(http.StatusUnauthorized).JSON(httpresponse.Error{
+			Code:    http.StatusUnauthorized,
+			Message: "Authentication failed",
+			Details: "User not found in context",
+		})
+	}
+
+	email, _ := c.Locals("user_email").(string)
+	name, _ := c.Locals("user_name").(string)
+
+	user := dto.Response{
+		ID:    userID,
+		Email: email,
+		Name:  name,
+	}
+
+	return c.Status(http.StatusOK).JSON(user)
+}
+

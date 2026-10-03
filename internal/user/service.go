@@ -3,7 +3,6 @@ package user
 import (
 	"errors"
 	"fmt"
-
 	"github.com/mamun-jsx/Ticket-Booking-App/internal/auth"
 	"github.com/mamun-jsx/Ticket-Booking-App/internal/user/dto"
 )
