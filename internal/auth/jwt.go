@@ -1,6 +1,9 @@
 package auth
 
 import (
+	"encoding/json"
+	"fmt"
+	"go/token"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -22,7 +25,7 @@ type JwtCustomClaim struct {
 
 type JWTService interface {
 	GenerateToken(userID uint, email string, name string) (string, error)
-	// ValidateToken(tokenStr string) (*JwtCustomClaim, error)
+	ValidateToken(tokenStr string) (*JwtCustomClaim, error)
 }
 
 type jwtService struct {
@@ -46,12 +49,12 @@ func NewJWTService(secretKey string, tokenDuration time.Duration) JWTService {
 
 func (s *jwtService) GenerateToken(userId uint, email string, name string) (string, error) {
 	claims := JwtCustomClaim{
-		UserID: userId,
-		Email:  email,
-		Name:   name,
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(s.tokenDuration)),
-			IssuedAt:  jwt.NewNumericDate(time.Now()),
-			Issuer:    "ticket-booking-app",
+		UserID:    userId,
+		Email:     email,
+		Name:      name,
+		ExpiresAt: jwt.NewNumericDate(time.Now().Add(s.tokenDuration)),
+		IssuedAt:  jwt.NewNumericDate(time.Now()),
+		Issuer:    "ticket-booking-app",
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenStr, err := token.SignedString([]byte(s.secretKey))
@@ -62,6 +65,23 @@ func (s *jwtService) GenerateToken(userId uint, email string, name string) (stri
 	return tokenStr, nil
 }
 
-// func (s *jwtService) ValidateToken(tokenStr string) (*JwtCustomClaim, error) {
+func (s *jwtService) ValidateToken(tokenStr string) (*JwtCustomClaim, error) {
 
-// }
+	token, err := jwt.ParseWithClaims(tokenStr, &JwtCustomClaim{}, func(token *jwt.Token) (any, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodECDSA); !ok {
+			return nil, fmt.Errorf("unexpected signin mathods %w", token.Header["alg"])
+
+		}
+		return []byte(s.secretKey), nil
+	})
+
+	if err != nil {
+		return nil, fmt.Errorf("validate token failed %w", err)
+	}
+
+	if claims, ok := token.Claims.(*JwtCustomClaim); ok && token.Valid {
+		return claims, nil
+	}
+
+	return nil, fmt.Errorf("token Invalid")
+}
