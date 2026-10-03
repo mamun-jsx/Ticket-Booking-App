@@ -10,7 +10,7 @@ import (
 type EventService interface {
 	CreateEvent(req *dto.CreateRequestEvent) (*dto.ResponseEvent, error)
 	GetAllEvents() ([]*dto.ResponseEvent, error)
-	GetEventByID(id uint64) (*Event, error)
+	GetEventByID(id uint) (*dto.ResponseEvent, error)
 	UpdateEvent(event *Event) error
 	DeleteEvent(event *Event) error
 }
@@ -49,6 +49,7 @@ func (s *service) CreateEvent(req *dto.CreateRequestEvent) (*dto.ResponseEvent, 
 	return event.ToResponse(), nil
 }
 
+// ? All Events []
 func (s *service) GetAllEvents() ([]*dto.ResponseEvent, error) {
 	events, err := s.repo.GetAllEvent()
 
@@ -66,8 +67,13 @@ func (s *service) GetAllEvents() ([]*dto.ResponseEvent, error) {
 	return allEvents, nil
 }
 
-func (s *service) GetEventByID(id uint64) (*Event, error) {
-	return s.repo.GetEventByID(id)
+//* get a single events By ID
+func (s *service) GetEventByID(id uint) (*dto.ResponseEvent, error) {
+	event, err := s.repo.GetEventByID(id)
+	if err != nil {
+		return nil, err
+	}
+	return event.ToResponse(), nil
 }
 
 func (s *service) UpdateEvent(event *Event) error {
