@@ -4,7 +4,7 @@ import "gorm.io/gorm"
 
 type EventRepository interface {
 	CreateEvent(event *Event) error
-	GetAllEvents() ([]*Event, error)
+	GetAllEvent() ([]*Event, error)
 	GetEventByID(id uint64) (*Event, error)
 	UpdateEvent(event *Event) error
 	DeleteEvent(event *Event) error
@@ -24,8 +24,8 @@ func (r *repository) CreateEvent(event *Event) error {
 	return r.db.Create(event).Error
 }
 
-// get all events
-func (r *repository) GetAllEvents() ([]*Event, error) {
+//* get all events
+func (r *repository) GetAllEvent() ([]*Event, error) {
 	var events []*Event
 	err := r.db.Find(&events).Error
 	if err != nil {
@@ -34,7 +34,7 @@ func (r *repository) GetAllEvents() ([]*Event, error) {
 	return events, nil
 }
 
-// get an event by id
+//* get an event by id
 func (r *repository) GetEventByID(id uint64) (*Event, error) {
 	var event *Event
 	err := r.db.First(&event, id).Error
@@ -44,7 +44,7 @@ func (r *repository) GetEventByID(id uint64) (*Event, error) {
 	return event, nil
 }
 
-// update an event
+//? update an event
 func (r *repository) UpdateEvent(event *Event) error {
 	err := r.db.Save(event).Error
 	if err != nil {
@@ -53,7 +53,7 @@ func (r *repository) UpdateEvent(event *Event) error {
 	return nil
 }
 
-// delete an event
+//! delete an event
 func (r *repository) DeleteEvent(event *Event) error {
 	err := r.db.Delete(event).Error
 	if err != nil {
