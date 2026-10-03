@@ -27,21 +27,37 @@ func (r *repository) CreateEvent(event *Event) error {
 // get all events
 func (r *repository) GetAllEvents() ([]*Event, error) {
 	var events []*Event
-	return events, r.db.Find(&events).Error
+	err := r.db.Find(&events).Error
+	if err != nil {
+		return nil, err
+	}
+	return events, nil
 }
 
 // get an event by id
 func (r *repository) GetEventByID(id uint64) (*Event, error) {
 	var event *Event
-	return event, r.db.First(&event, id).Error
+	err := r.db.First(&event, id).Error
+	if err != nil {
+		return nil, err
+	}
+	return event, nil
 }
 
 // update an event
 func (r *repository) UpdateEvent(event *Event) error {
-	return r.db.Save(event).Error
+	err := r.db.Save(event).Error
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 // delete an event
 func (r *repository) DeleteEvent(event *Event) error {
-	return r.db.Delete(event).Error
+	err := r.db.Delete(event).Error
+	if err != nil {
+		return err
+	}
+	return nil
 }
