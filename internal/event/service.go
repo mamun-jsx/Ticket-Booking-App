@@ -1,6 +1,7 @@
 package event
 
 import (
+	"errors"
 	"time"
 
 	"github.com/mamun-jsx/Ticket-Booking-App/internal/event/dto"
@@ -57,6 +58,9 @@ func (s *service) GetAllEvents() ([]*dto.ResponseEvent, error) {
 	var allEvents []*dto.ResponseEvent
 	for _, event := range events {
 		allEvents = append(allEvents, event.ToResponse())
+	}
+	if len(allEvents) == 0 {
+		return nil, errors.New("Currently no Events posted")
 	}
 	// return te response
 	return allEvents, nil
