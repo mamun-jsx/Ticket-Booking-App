@@ -45,7 +45,6 @@ func (h *handler) CreateEvent(c fiber.Ctx) error {
 			Details: err.Error(),
 		})
 	}
-
 	// 2. Delegate business logic and entity creation to the service layer
 	res, err := h.service.CreateEvent(&req)
 
@@ -53,4 +52,13 @@ func (h *handler) CreateEvent(c fiber.Ctx) error {
 		return eventErrorResponse(c, err)
 	}
 	return c.Status(http.StatusOK).JSON(res)
+}
+
+// get the array of object as (all events)
+func (h *handler) GetAllEvents(c fiber.Ctx) error {
+	events, err := h.service.GetAllEvents()
+	if err != nil {
+		return eventErrorResponse(c, err)
+	}
+	return c.Status(http.StatusOK).JSON(events)
 }
