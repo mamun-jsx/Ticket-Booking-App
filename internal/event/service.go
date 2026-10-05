@@ -11,7 +11,7 @@ type EventService interface {
 	CreateEvent(req *dto.CreateRequestEvent) (*dto.ResponseEvent, error)
 	GetAllEvents() ([]*dto.ResponseEvent, error)
 	GetEventByID(id uint) (*dto.ResponseEvent, error)
-	UpdateEvent(event *Event) error
+	UpdateEvent(eventId uint, req *dto.UpdateRequestEvent) error
 	DeleteEvent(event *Event) error
 }
 
@@ -67,7 +67,7 @@ func (s *service) GetAllEvents() ([]*dto.ResponseEvent, error) {
 	return allEvents, nil
 }
 
-//* get a single events By ID
+// * get a single events By ID
 func (s *service) GetEventByID(id uint) (*dto.ResponseEvent, error) {
 	event, err := s.repo.GetEventByID(id)
 	if err != nil {
@@ -76,8 +76,39 @@ func (s *service) GetEventByID(id uint) (*dto.ResponseEvent, error) {
 	return event.ToResponse(), nil
 }
 
-func (s *service) UpdateEvent(event *Event) error {
-	return s.repo.UpdateEvent(event)
+// ? Update a single service
+func (s *service) UpdateEvent(eventId uint, req *dto.UpdateRequestEvent) (*dto.ResponseEvent, error) {
+	event, err := s.repo.GetEventByID(eventId)
+	if err != nil {
+		return nil, err
+	}
+	if req.Title == "" {
+		event.Title = req.Title
+	}
+	if req.Description == "" {
+		event.Description = req.Description
+	}
+	if req.Location == "" {
+		event.Location = req.Location
+	}
+	if req.StartsAt == "" {
+		parsedTime, err := time.Parse(time.RFC3339, req.StartsAt)
+		if err != nil {
+			return nil, err // Return parsing errors (e.g., bad format from client)
+		}
+		event.StartsAt = parsedTime
+	}
+	if req.TotalTickets == 0 {
+		event.TotalTickets = req.TotalTickets
+	}
+	if req.Price == 0 {
+		event.Price = req.Price
+	}
+
+	if err := s.repo.UpdateEvent(event); err != nil {
+		return nil, err
+	}
+	return event.ToResponse(), nil
 }
 
 func (s *service) DeleteEvent(event *Event) error {
