@@ -82,26 +82,26 @@ func (s *service) UpdateEvent(eventId uint, req *dto.UpdateRequestEvent) (*dto.R
 	if err != nil {
 		return nil, err
 	}
-	if req.Title == "" {
+	if req.Title != "" {
 		event.Title = req.Title
 	}
-	if req.Description == "" {
+	if req.Description != "" {
 		event.Description = req.Description
 	}
-	if req.Location == "" {
+	if req.Location != "" {
 		event.Location = req.Location
 	}
-	if req.StartsAt == "" {
+	if req.StartsAt != "" {
 		parsedTime, err := time.Parse(time.RFC3339, req.StartsAt)
 		if err != nil {
 			return nil, err // Return parsing errors (e.g., bad format from client)
 		}
 		event.StartsAt = parsedTime
 	}
-	if req.TotalTickets == 0 {
+	if req.TotalTickets != 0 {
 		event.TotalTickets = req.TotalTickets
 	}
-	if req.Price == 0 {
+	if req.Price != 0 {
 		event.Price = req.Price
 	}
 
