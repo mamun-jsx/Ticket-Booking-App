@@ -81,3 +81,29 @@ func (h *handler) GetEventByID(c fiber.Ctx) error {
 	}
 	return c.Status(http.StatusOK).JSON(res)
 }
+
+// update a single event by id
+
+func (h *handler) UpdateEvent(c fiber.Ctx) error {
+	// string to uint conversion
+	id, err := strconv.Atoi(c.Params("id"))
+	if err != nil {
+		return c.Status(http.StatusBadRequest).JSON(httpresponse.Error{
+			Code:    http.StatusBadRequest,
+			Message: "Invalid Event ID",
+			Details: err.Error(),
+		})
+	}
+	var req dto.UpdateRequestEvent
+
+	// bind request body
+	if err := c.Bind().Body(&req); err != nil {
+		return eventErrorResponse(c, err)
+	}
+	res, err := h.service.UpdateEvent(uint(id), &req)
+	if err != nil {
+		return eventErrorResponse(c, err)
+	}
+	return c.Status(http.StatusOK).JSON(res)
+}
+
