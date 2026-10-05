@@ -11,7 +11,7 @@ type EventService interface {
 	CreateEvent(req *dto.CreateRequestEvent) (*dto.ResponseEvent, error)
 	GetAllEvents() ([]*dto.ResponseEvent, error)
 	GetEventByID(id uint) (*dto.ResponseEvent, error)
-	UpdateEvent(eventId uint, req *dto.UpdateRequestEvent) error
+	UpdateEvent(eventId uint, req *dto.UpdateRequestEvent) (*dto.ResponseEvent, error)
 	DeleteEvent(event *Event) error
 }
 
