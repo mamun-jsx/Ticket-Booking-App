@@ -17,4 +17,5 @@ func InitEventRoutes(router fiber.Router, db *gorm.DB) {
 	api.Get("/:id", eventHandler.GetEventByID)
 	api.Post("/create", eventHandler.CreateEvent)
 	api.Put("/update/:id", eventHandler.UpdateEvent)
+	api.Delete("/delete/:id", eventHandler.DeleteEvent)
 }

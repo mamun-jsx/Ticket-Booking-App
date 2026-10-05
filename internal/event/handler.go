@@ -107,3 +107,20 @@ func (h *handler) UpdateEvent(c fiber.Ctx) error {
 	return c.Status(http.StatusOK).JSON(res)
 }
 
+// ! delete a single event by ID
+func (h *handler) DeleteEvent(c fiber.Ctx) error {
+	id, err := strconv.Atoi(c.Params("id"))
+	if err != nil {
+		return c.Status(http.StatusBadRequest).JSON(httpresponse.Error{
+			Code:    http.StatusBadRequest,
+			Message: "Invalid Event ID",
+			Details: err.Error(),
+		})
+	}
+
+	if err := h.service.DeleteEvent(uint(id)); err != nil {
+		return eventErrorResponse(c, err)
+	}
+
+	return c.SendStatus(http.StatusNoContent) // 204 - success, no body
+}

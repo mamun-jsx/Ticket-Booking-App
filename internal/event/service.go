@@ -12,7 +12,7 @@ type EventService interface {
 	GetAllEvents() ([]*dto.ResponseEvent, error)
 	GetEventByID(id uint) (*dto.ResponseEvent, error)
 	UpdateEvent(eventId uint, req *dto.UpdateRequestEvent) (*dto.ResponseEvent, error)
-	DeleteEvent(event *Event) error
+	DeleteEvent(id uint) error
 }
 
 type service struct {
@@ -111,6 +111,11 @@ func (s *service) UpdateEvent(eventId uint, req *dto.UpdateRequestEvent) (*dto.R
 	return event.ToResponse(), nil
 }
 
-func (s *service) DeleteEvent(event *Event) error {
+// ! delete a single event by ID
+func (s *service) DeleteEvent(id uint) error {
+	event, err := s.repo.GetEventByID(id)
+	if err != nil {
+		return err
+	}
 	return s.repo.DeleteEvent(event)
 }
