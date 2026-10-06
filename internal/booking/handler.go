@@ -14,9 +14,10 @@ type handler struct {
 	service BookingService
 }
 
-func NewHandler(s BookingService) *handler {
+func NewBookingHandler(s BookingService) *handler {
 	return &handler{service: s}
 }
+
 
 // ? func to get current user.
 

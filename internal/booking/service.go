@@ -69,5 +69,50 @@ func (s *service) CreateBooking(userId uint, req *dto.CreateBookingRequest) (*dt
 		// ? Update database and the event tickets quantity
 	}
 	return booking.ToResponse(), nil
+}
 
+// get all bookings for a user
+func (s *service) GetUserBookings(userID uint) ([]*dto.BookingResponse, error) {
+	bookings, err := s.bookingRepo.GetByUserID(userID)
+	if err != nil {
+		return nil, err
+	}
+
+	var responses []*dto.BookingResponse
+	for _, b := range bookings {
+		responses = append(responses, b.ToResponse())
+	}
+	return responses, nil
+}
+
+// cancel a booking by ID (only the owner can cancel)
+func (s *service) CancelBooking(bookingID uint, userID uint) error {
+	booking, err := s.bookingRepo.GetBookingById(bookingID)
+	if err != nil {
+		return err
+	}
+
+	// ensure the booking belongs to the requesting user
+	if booking.UserID != userID {
+		return ErrForbiddenBookingAccess
+	}
+
+	// prevent double-cancellation
+	if booking.Status == BookingCanclled {
+		return ErrBookingAlreadyCanceled
+	}
+
+	// restore available tickets on the event
+	event, err := s.eventRepo.GetEventByID(booking.EventID)
+	if err != nil {
+		return err
+	}
+	event.AvailableTickets += booking.Quantity
+	if err := s.eventRepo.UpdateEvent(event); err != nil {
+		return err
+	}
+
+	// mark the booking as cancelled
+	booking.Status = BookingCanclled
+	return s.bookingRepo.UpdateBooking(booking)
 }
