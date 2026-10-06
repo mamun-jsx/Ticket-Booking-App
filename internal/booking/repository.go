@@ -6,7 +6,7 @@ import (
 	"gorm.io/gorm"
 )
 
-var ErrorBookingNotFound = errors.New("booking not found")
+var ErrBookingNotFound = errors.New("booking not found")
 var ErrorBookingAlreadyCancelled = errors.New("booking already cancelled")
 
 type BookingRepository interface {
@@ -35,7 +35,7 @@ func (r *repository) GetBookingById(bookingId uint) (*Booking, error) {
 	err := r.db.First(&booking, bookingId).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, ErrorBookingNotFound
+			return nil, ErrBookingNotFound
 		}
 		return nil, err
 	}
@@ -52,6 +52,7 @@ func (r *repository) GetByUserID(userID uint) ([]*Booking, error) {
 	return bookings, nil
 }
 
+// update booking
 func (r *repository) UpdateBooking(booking *Booking) error {
 	return r.db.Save(booking).Error
 }
