@@ -28,6 +28,7 @@ func getCurrentUserID(c fiber.Ctx) (uint, bool) {
 	}
 	return userID, true
 }
+
 func bookingErrorResponse(c fiber.Ctx, err error) error {
 	if errors.Is(err, ErrBookingNotFound) {
 		return c.Status(http.StatusNotFound).JSON(httpresponse.Error{

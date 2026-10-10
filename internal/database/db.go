@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/mamun-jsx/Ticket-Booking-App/config"
+	"github.com/mamun-jsx/Ticket-Booking-App/internal/booking"
 	"github.com/mamun-jsx/Ticket-Booking-App/internal/event"
 	"github.com/mamun-jsx/Ticket-Booking-App/internal/user"
 	"gorm.io/driver/postgres"
@@ -31,7 +32,8 @@ func DatabaseConnection(cfg *config.Config) (*gorm.DB, error) {
 	err = db.AutoMigrate(
 		&user.User{},
 		&event.Event{},
-		// Future domain entities will be added here, e.g.: &ticket.Ticket{}
+		&booking.Booking{},
+		// Future domain entities will be added here
 	)
 	if err != nil {
 		log.Printf("Database migration failed: %v", err)
